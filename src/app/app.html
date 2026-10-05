@@ -199,38 +199,37 @@
                 </small>
               </th>
 
-              <td
-                *ngFor="let profile of profiles; trackBy: trackProfile"
-                class="metric-cell mortality-cell"
-              >
+<td
+  *ngFor="let profile of profiles; trackBy: trackProfile"
+  class="metric-cell mortality-cell"
+>
+  <div class="main-value">
+    {{ displayValue(profile, row.key) }}
+  </div>
 
-                <ng-container
-                  *ngIf="mortalityChart(profile, row.key) as chartUrl; else noChart"
-                >
+  <div class="benchmark">
+    {{ displayBenchmark(profile, row.key) }}
+  </div>
 
-                  <div class="main-value">
-                    See chart
-                  </div>
+  <div
+    class="mortality-status"
+    *ngIf="mortalityStatus(profile, row.key) as status"
+  >
+    {{ status }}
+  </div>
 
-                  <a
-                    [href]="chartUrl"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Open NJR mortality chart
-                  </a>
-
-                </ng-container>
-
-                <ng-template #noChart>
-
-                  <div class="main-value">
-                    {{ displayValue(profile, row.key) }}
-                  </div>
-
-                </ng-template>
-
-              </td>
+  <ng-container
+    *ngIf="mortalityChart(profile, row.key) as chartUrl"
+  >
+    <a
+      [href]="chartUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Open NJR mortality chart
+    </a>
+  </ng-container>
+</td>
 
             </tr>
 

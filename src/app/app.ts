@@ -13,6 +13,15 @@ export interface SurgeonMetric {
   type: 'volume' | 'percentage' | 'mortality';
   chartUrl?: string | null;
   available?: boolean;
+  smr?: number | null;
+
+smrStatus?:
+  | 'Below average'
+  | 'At average'
+  | 'Above average'
+  | 'Not available';
+
+warning?: boolean;
 }
 
 export interface SurgeonProfile {
@@ -36,6 +45,31 @@ export class App {
 
   loading = false;
   error = '';
+
+  isWarning(
+  profile: SurgeonProfile,
+  key: string,
+): boolean {
+  const metric =
+    profile.metrics.find(
+      m => m.key === key
+    );
+
+  return metric?.warning === true;
+}
+
+
+mortalityStatus(
+  profile: SurgeonProfile,
+  key: string,
+): string {
+  const metric =
+    profile.metrics.find(
+      m => m.key === key
+    );
+
+  return metric?.smrStatus || '';
+}
 
   /**
    * The rows shown in the comparison table.
@@ -273,36 +307,44 @@ export class App {
   }
 
   displayValue(profile: SurgeonProfile, key: string): string {
-    const metric = this.metricFor(profile, key);
+  const metric = this.metricFor(profile, key);
 
-    if (!metric) {
-      return '—';
-    }
-
-    if (metric.type === 'mortality') {
-      if (!metric.available) {
-        return 'Not available';
-      }
-
-      return 'See SMR chart';
-    }
-
-    return metric.value || '—';
+  if (!metric) {
+    return '—';
   }
 
-  displayBenchmark(profile: SurgeonProfile, key: string): string {
-    const metric = this.metricFor(profile, key);
-
-    if (!metric || metric.type === 'mortality') {
-      return '';
+  if (metric.type === 'mortality') {
+    if (!metric.available) {
+      return 'Not available';
     }
 
-    if (!metric.benchmark) {
-      return '';
+    if (metric.smr == null) {
+      return 'SMR not available';
     }
 
-    return `National avg: ${metric.benchmark}`;
+    return metric.smr.toFixed(3);
   }
+
+  return metric.value || '—';
+}
+
+displayBenchmark(profile: SurgeonProfile, key: string): string {
+  const metric = this.metricFor(profile, key);
+
+  if (!metric) {
+    return '';
+  }
+
+  if (metric.type === 'mortality') {
+    return 'National average: SMR 1.000';
+  }
+
+  if (!metric.benchmark) {
+    return '';
+  }
+
+  return `National avg: ${metric.benchmark}`;
+}
 
   mortalityChart(profile: SurgeonProfile, key: string): string | null {
     return this.metricFor(profile, key)?.chartUrl || null;

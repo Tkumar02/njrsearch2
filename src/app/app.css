@@ -1,0 +1,25 @@
+.warning-cell {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.warning-cell .main-value {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.warning-cell .benchmark {
+  color: #991b1b;
+}
+
+.mortality-status {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mortality-cell a {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+}
