@@ -357,4 +357,41 @@ displayBenchmark(profile: SurgeonProfile, key: string): string {
   trackMetric(_: number, row: any): string {
     return row.key;
   }
+
+  isSmrAboveOne(profile: any, metricKey: string): boolean {
+  const valStr = this.displayValue(profile, metricKey);
+  const parsed = parseFloat(valStr);
+  return !isNaN(parsed) && parsed > 1.0;
+}
+
+isCellInWarningState(profile: any, row: any): boolean {
+  const valStr = this.displayValue(profile, row.key);
+  const benchStr = this.displayBenchmark(profile, row.key);
+  
+  const val = parseFloat(valStr);
+  const bench = parseFloat(benchStr);
+
+  // If numbers can't be parsed, no warning
+  if (isNaN(val)) return false;
+
+  // Rule 1: Mortality / Revision rates -> Red if ABOVE national average (or > 1 where applicable)
+  if (row.section === 'Mortality' || row.key.toLowerCase().includes('revision')) {
+    // If benchmark exists, compare to it. Otherwise fallback to > 1.0 for SMR.
+    if (!isNaN(bench)) {
+      return val > bench;
+    }
+    return val > 1.0;
+  }
+
+  // Rule 2: Total Hip Replacement / Total Knee Replacement -> Red if BELOW national average
+  const keyLower = row.key.toLowerCase();
+  if (keyLower.includes('hip') || keyLower.includes('knee') || keyLower.includes('replacement')) {
+    if (!isNaN(bench)) {
+      return val < bench;
+    }
+  }
+
+  return false;
+}
+
 }

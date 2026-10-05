@@ -109,9 +109,11 @@
                 </small>
               </th>
 
+              <!-- 💡 1. Added [ngClass] here to check surgical volume rules (hip/knee below average, revision above average) -->
               <td
                 *ngFor="let profile of profiles; trackBy: trackProfile"
                 class="metric-cell"
+                [ngClass]="{ 'warning-cell': isCellInWarningState(profile, row) }"
               >
 
                 <div class="main-value">
@@ -199,37 +201,39 @@
                 </small>
               </th>
 
-<td
-  *ngFor="let profile of profiles; trackBy: trackProfile"
-  class="metric-cell mortality-cell"
->
-  <div class="main-value">
-    {{ displayValue(profile, row.key) }}
-  </div>
+              <!-- 💡 2. Updated mortality section to use the same unified function passing `row` instead of `row.key` -->
+              <td
+                *ngFor="let profile of profiles; trackBy: trackProfile"
+                class="metric-cell mortality-cell"
+                [ngClass]="{ 'warning-cell': isCellInWarningState(profile, row) }"
+              >
+                <div class="main-value">
+                  {{ displayValue(profile, row.key) }}
+                </div>
 
-  <div class="benchmark">
-    {{ displayBenchmark(profile, row.key) }}
-  </div>
+                <div class="benchmark">
+                  {{ displayBenchmark(profile, row.key) }}
+                </div>
 
-  <div
-    class="mortality-status"
-    *ngIf="mortalityStatus(profile, row.key) as status"
-  >
-    {{ status }}
-  </div>
+                <div
+                  class="mortality-status"
+                  *ngIf="mortalityStatus(profile, row.key) as status"
+                >
+                  {{ status }}
+                </div>
 
-  <ng-container
-    *ngIf="mortalityChart(profile, row.key) as chartUrl"
-  >
-    <a
-      [href]="chartUrl"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Open NJR mortality chart
-    </a>
-  </ng-container>
-</td>
+                <ng-container
+                  *ngIf="mortalityChart(profile, row.key) as chartUrl"
+                >
+                  <a
+                    [href]="chartUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open NJR mortality chart
+                  </a>
+                </ng-container>
+              </td>
 
             </tr>
 
@@ -458,7 +462,7 @@
   }
 
   .main-value {
-    font-size: 17px;
+    main-value: 17px;
     font-weight: 600;
   }
 
@@ -492,6 +496,37 @@
     padding: 60px 20px;
     text-align: center;
     color: #6b7280;
+  }
+
+  /* --- Warning State Styling --- */
+
+  .warning-cell {
+    background-color: #fee2e2 !important;
+  }
+
+  .warning-cell .main-value {
+    color: #b91c1c !important;
+    font-weight: 700;
+  }
+
+  .warning-cell .benchmark {
+    color: #991b1b !important;
+  }
+
+  .warning-cell .mortality-status {
+    color: #991b1b !important;
+  }
+
+  .mortality-status {
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .mortality-cell a {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 12px;
   }
 
 </style>

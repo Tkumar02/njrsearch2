@@ -1,15 +1,21 @@
+/* --- Existing & Updated Styling --- */
+
 .warning-cell {
-  background: #fee2e2;
-  color: #991b1b;
+  background-color: #fee2e2 !important;
+  border-color: #fca5a5;
 }
 
 .warning-cell .main-value {
-  color: #b91c1c;
+  color: #b91c1c !important;
   font-weight: 700;
 }
 
 .warning-cell .benchmark {
-  color: #991b1b;
+  color: #991b1b !important;
+}
+
+.warning-cell .mortality-status {
+  color: #991b1b !important;
 }
 
 .mortality-status {
