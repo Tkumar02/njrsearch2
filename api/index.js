@@ -1,9 +1,10 @@
-import { reqHandler } from '../dist/njrsearch2/server/server.mjs';
+// api/index.js
+const { reqHandler } = require('../dist/njrsearch2/server/server.mjs');
 
-export default async function handler(req: any, res: any) {
+module.exports = async function (req, res) {
   try {
     return await reqHandler(req, res);
-  } catch (err: any) {
+  } catch (err) {
     console.error("Vercel Serverless Error:", err);
     return res.status(500).json({ 
       success: false, 
@@ -11,4 +12,4 @@ export default async function handler(req: any, res: any) {
       details: err.message 
     });
   }
-}
+};
