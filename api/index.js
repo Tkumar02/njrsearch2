@@ -1,8 +1,7 @@
 // api/index.js
-const { reqHandler } = require('../dist/njrsearch2/server/server.mjs');
-
-module.exports = async function (req, res) {
+export default async function handler(req, res) {
   try {
+    const { reqHandler } = await import('../dist/njrsearch2/server/server.mjs');
     return await reqHandler(req, res);
   } catch (err) {
     console.error("Vercel Serverless Error:", err);
@@ -12,4 +11,4 @@ module.exports = async function (req, res) {
       details: err.message 
     });
   }
-};
+}
