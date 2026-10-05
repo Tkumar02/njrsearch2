@@ -7,7 +7,7 @@
     }
   ],
   "functions": {
-    "api/index.ts": {
+    "api/index.js": {
       "includeFiles": "dist/njrsearch2/**"
     }
   }
