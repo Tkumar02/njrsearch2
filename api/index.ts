@@ -1,5 +1,14 @@
-import { reqHandler } from '../dist/njrsearch2/server/server.mjs'; // Make sure this matches your build path layout or use your bundled handler
+import { reqHandler } from '../dist/njrsearch2/server/server.mjs';
 
 export default async function handler(req: any, res: any) {
-  return reqHandler(req, res);
+  try {
+    return await reqHandler(req, res);
+  } catch (err: any) {
+    console.error("Vercel Serverless Error:", err);
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Internal Serverless Error', 
+      details: err.message 
+    });
+  }
 }
